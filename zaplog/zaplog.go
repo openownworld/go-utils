@@ -14,6 +14,7 @@ import (
 	"os"
 	"runtime"
 	"runtime/debug"
+	"strings"
 	"time"
 )
 
@@ -423,8 +424,8 @@ func printlnLog(level string, args ...interface{}) {
 // Debug logs a message at level Debug on the compatibleLogger.
 func Debug(args ...interface{}) {
 	if logger != nil {
-		//logger.Debug(strings.TrimRight(fmt.Sprintln(args...), "\n")) //Sprintln带了换行符，TrimRight从右边去掉“\n”换行符
-		logger.Debug(fmt.Sprint(args...)) //zap 默认带换行符
+		logger.Debug(strings.TrimRight(fmt.Sprintln(args...), "\n")) //Sprintln带了换行符，TrimRight从右边去掉“\n”换行符
+		//logger.Debug(fmt.Sprint(args...)) //zap 默认带换行符，Sprint不带空格拼接，Sprintln带空格拼接
 	} else {
 		printlnLog("c-debug", args...)
 	}
@@ -442,7 +443,7 @@ func Debugf(format string, args ...interface{}) {
 // Info logs a message at level Info on the compatibleLogger.
 func Info(args ...interface{}) {
 	if logger != nil {
-		logger.Info(fmt.Sprint(args...))
+		logger.Info(strings.TrimRight(fmt.Sprintln(args...), "\n"))
 	} else {
 		printlnLog("c-info", args...)
 	}
@@ -460,7 +461,7 @@ func Infof(format string, args ...interface{}) {
 // Warn logs a message at level Warn on the compatibleLogger.
 func Warn(args ...interface{}) {
 	if logger != nil {
-		logger.Warn(fmt.Sprint(args...))
+		logger.Warn(strings.TrimRight(fmt.Sprintln(args...), "\n"))
 	} else {
 		printlnLog("c-warn", args...)
 	}
@@ -478,7 +479,7 @@ func Warnf(format string, args ...interface{}) {
 // Error logs a message at level Error on the compatibleLogger.
 func Error(args ...interface{}) {
 	if logger != nil {
-		logger.Error(fmt.Sprint(args...))
+		logger.Error(strings.TrimRight(fmt.Sprintln(args...), "\n"))
 	} else {
 		printlnLog("c-error", args...)
 	}
@@ -496,7 +497,7 @@ func Errorf(format string, args ...interface{}) {
 // Fatal logs a message at level Fatal on the compatibleLogger.
 func Fatal(args ...interface{}) {
 	if logger != nil {
-		logger.Fatal(fmt.Sprint(args...))
+		logger.Fatal(strings.TrimRight(fmt.Sprintln(args...), "\n"))
 	} else {
 		printlnLog("c-fatal", args...)
 	}
@@ -514,7 +515,7 @@ func Fatalf(format string, args ...interface{}) {
 // Panic logs a message at level Painc on the compatibleLogger.
 func Panic(args ...interface{}) {
 	if logger != nil {
-		logger.Panic(fmt.Sprint(args...))
+		logger.Panic(strings.TrimRight(fmt.Sprintln(args...), "\n"))
 	} else {
 		printlnLog("c-panic", args...)
 	}
