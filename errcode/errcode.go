@@ -4,7 +4,7 @@ import "fmt"
 
 //错误码定义  程序内部错误相关
 const (
-	Succeed = -1000 + iota*(-1) // (0 * -1)
+	Succeed = iota*(-1) // (0 * -1)
 	Failed
 	OperationErr
 	InvalidArgErr
