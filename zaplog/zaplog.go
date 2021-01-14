@@ -418,7 +418,8 @@ func Printfln(format string, args ...interface{}) {
 }
 
 func printlnLog(level string, args ...interface{}) {
-	fmt.Println(fmt.Sprintf("%s %s %s %s", GetNowTimeMs(), level, GetCallerInfo(3), fmt.Sprint(args...)))
+	//fmt.Println(fmt.Sprintf("%s %s %s %s", GetNowTimeMs(), level, GetCallerInfo(3), fmt.Sprint(args...)))
+	fmt.Print(fmt.Sprintf("%s %s %s %s", GetNowTimeMs(), level, GetCallerInfo(3), fmt.Sprintln(args...)))
 }
 
 // Debug logs a message at level Debug on the compatibleLogger.
