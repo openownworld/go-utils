@@ -1,7 +1,7 @@
 package zaplog
 
 import (
-	"go.lbj.pkg/go-utils/tools"
+	"github.com/openownworld/go-utils/tools"
 	"testing"
 	"time"
 

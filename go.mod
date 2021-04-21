@@ -1,4 +1,4 @@
-module go.lbj.pkg/go-utils
+module github.com/openownworld/go-utils
 
 go 1.15
 

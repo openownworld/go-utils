@@ -2,8 +2,8 @@ package jlog
 
 import (
 	"fmt"
-	"go.lbj.pkg/go-utils/jerror"
 	"log"
+	"github.com/openownworld/go-utils/jerror"
 	"os"
 	"runtime"
 	"strings"

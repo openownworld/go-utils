@@ -2,7 +2,7 @@ package utils
 
 import (
 	"fmt"
-	"go.lbj.pkg/go-utils/zaplog"
+	"github.com/openownworld/go-utils/zaplog"
 	"runtime"
 )
 
