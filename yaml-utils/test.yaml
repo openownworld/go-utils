@@ -1,0 +1,7 @@
+local:
+  # websocket 地址 0.0.0.0:9000
+  wsIPAddr: 0.0.0.0:9000
+
+mysql:
+  url: root:123456@tcp(12.0.0.1:3308)/db?charset=utf8mb4&parseTime=True&loc=Local
+

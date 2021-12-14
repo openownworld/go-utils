@@ -5,17 +5,22 @@
 // @File:   ini_test.go
 // @Description:
 
-package ini
+package ini_utils
 
 import (
 	"fmt"
 	"testing"
 )
 
+type MySQL struct {
+	Url string `ini:"url"`
+}
+
 // 字段必须大写
 type IniInfo struct {
-	LogFileName   string `ini:"logFileName"`
-	ErrorFileName string `ini:"errorFileName"`
+	LogFileName   string `ini-utils:"logFileName"`
+	ErrorFileName string `ini-utils:"errorFileName"`
+	MySQL         MySQL  `ini:"mysql"`
 }
 
 func TestINI(t *testing.T) {

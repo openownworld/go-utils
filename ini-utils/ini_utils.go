@@ -5,7 +5,7 @@
 // @File:   ini_utils.go
 // @Description:
 
-package ini
+package ini_utils
 
 import (
 	"fmt"
@@ -140,7 +140,7 @@ func (p *Parser) GetFileHandle() *ini.File {
 	return p.reader
 }
 
-// GetValueMap ini to map
+// GetValueMap ini-utils to map
 // Section为空时，默认值为DEFAULT
 // DEFAULT.default=kv
 // server.ip=0.0.0.0
