@@ -33,27 +33,27 @@ import (
 // 支持日志分级warn error能单独复制提取保存文件，支持动态设置日志分级，支持日志压缩
 type LogConfig struct {
 	//配置文件要通过tag来指定配置文件中的名称
-	LogFileName        string `ini-utils:"logFileName"`
-	ErrorFileName      string `ini-utils:"errorFileName"`
-	MaxSize            int    `ini-utils:"maxSize"`
-	MaxBackups         int    `ini-utils:"maxBackups"`
-	MaxDays            int    `ini-utils:"maxDays"`
-	Compress           bool   `ini-utils:"compress"`
-	Level              string `ini-utils:"level"`
-	StacktraceLevel    string `ini-utils:"stacktraceLevel"`
-	ErrorFileLevel     string `ini-utils:"errorFileLevel"`
-	LevelHttpEnable    bool   `ini-utils:"levelHttpEnable"`
-	LevelHttpApi       string `ini-utils:"levelHttpApi"`
-	LevelHttpPort      string `ini-utils:"levelHttpPort"`
-	SocketLoggerEnable bool   `ini-utils:"socketLoggerEnable"`
-	SocketLoggerJSON   bool   `ini-utils:"socketLoggerJSON"`
-	SocketType         string `ini-utils:"socketType"`
-	SocketIP           string `ini-utils:"socketIP"`
-	SocketPort         string `ini-utils:"socketPort"`
-	FileLogger         bool   `ini-utils:"fileLogger"`
-	ConsoleLogger      bool   `ini-utils:"consoleLogger"`
-	FileLoggerJSON     bool   `ini-utils:"fileLoggerJSON"`
-	ConsoleLoggerJSON  bool   `ini-utils:"consoleLoggerJSON"`
+	LogFileName        string `ini:"logFileName"`
+	ErrorFileName      string `ini:"errorFileName"`
+	MaxSize            int    `ini:"maxSize"`
+	MaxBackups         int    `ini:"maxBackups"`
+	MaxDays            int    `ini:"maxDays"`
+	Compress           bool   `ini:"compress"`
+	Level              string `ini:"level"`
+	StacktraceLevel    string `ini:"stacktraceLevel"`
+	ErrorFileLevel     string `ini:"errorFileLevel"`
+	LevelHttpEnable    bool   `ini:"levelHttpEnable"`
+	LevelHttpApi       string `ini:"levelHttpApi"`
+	LevelHttpPort      string `ini:"levelHttpPort"`
+	SocketLoggerEnable bool   `ini:"socketLoggerEnable"`
+	SocketLoggerJSON   bool   `ini:"socketLoggerJSON"`
+	SocketType         string `ini:"socketType"`
+	SocketIP           string `ini:"socketIP"`
+	SocketPort         string `ini:"socketPort"`
+	FileLogger         bool   `ini:"fileLogger"`
+	ConsoleLogger      bool   `ini:"consoleLogger"`
+	FileLoggerJSON     bool   `ini:"fileLoggerJSON"`
+	ConsoleLoggerJSON  bool   `ini:"consoleLoggerJSON"`
 }
 
 var logConfig LogConfig
@@ -68,7 +68,7 @@ var FirstInit bool = false
 func init() {
 	//确保日志最先初始化
 	if FirstInit {
-		logConfigFile := "logConfig.ini-utils"
+		logConfigFile := "log.ini"
 		runDir, _ := filepath.Abs(filepath.Dir(os.Args[0]))
 		InitLoggerFile(path.Join(runDir, logConfigFile))
 	}

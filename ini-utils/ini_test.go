@@ -18,8 +18,8 @@ type MySQL struct {
 
 // 字段必须大写
 type IniInfo struct {
-	LogFileName   string `ini-utils:"logFileName"`
-	ErrorFileName string `ini-utils:"errorFileName"`
+	LogFileName   string `ini:"logFileName"`
+	ErrorFileName string `ini:"errorFileName"`
 	MySQL         MySQL  `ini:"mysql"`
 }
 

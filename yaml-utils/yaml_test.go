@@ -5,7 +5,7 @@
 // @File:   yaml_test.go
 // @Description:
 
-package config
+package yaml_utils
 
 import (
 	"encoding/json"

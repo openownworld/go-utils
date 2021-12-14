@@ -14,7 +14,7 @@ import (
 )
 
 func TestLog(t *testing.T) {
-	logConfigFile := "logConfig.ini-utils"
+	logConfigFile := "logConfig.ini"
 	InitLoggerFile(path.Join(utils.GetCurrentFilePath(), logConfigFile))
 	defer PrintPanicLog()
 	//panic("ppp")

@@ -1,4 +1,4 @@
-package config
+package yaml_utils
 
 import (
 	"fmt"
