@@ -418,11 +418,16 @@ func GetCallerInfo(stackNum int) string {
 
 // Println 打印日志到终端
 func Println(args ...interface{}) {
-	fmt.Println(fmt.Sprintf("%s %s %s %s", GetNowTimeMs(), "console", GetCallerInfo(2), fmt.Sprint(args...)))
+	fmt.Printf(fmt.Sprintf("%s %s %s %s", GetNowTimeMs(), "console", GetCallerInfo(2), fmt.Sprintln(args...)))
 }
 
 // Printfln 打印日志到终端
 func Printfln(format string, args ...interface{}) {
+	fmt.Println(fmt.Sprintf("%s %s %s %s", GetNowTimeMs(), "console", GetCallerInfo(2), fmt.Sprintf(format, args...)))
+}
+
+// Printf 打印日志到终端
+func Printf(format string, args ...interface{}) {
 	fmt.Println(fmt.Sprintf("%s %s %s %s", GetNowTimeMs(), "console", GetCallerInfo(2), fmt.Sprintf(format, args...)))
 }
 
