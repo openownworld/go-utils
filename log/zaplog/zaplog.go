@@ -510,24 +510,27 @@ func Fatal(args ...interface{}) {
 		logger.Fatal(strings.TrimRight(fmt.Sprintln(args...), "\n"))
 	} else {
 		printlnLog("c-fatal", args...)
+		os.Exit(1)
 	}
 }
 
-// Fatalf logs a message at level Fatal on the compatibleLogger.
+// Fatalf logs a message at level Fatal on the compatibleLogger. followed by a call to os.Exit(1).
 func Fatalf(format string, args ...interface{}) {
 	if logger != nil {
 		logger.Fatal(fmt.Sprintf(format, args...))
 	} else {
 		printlnLog("c-fatal", fmt.Sprintf(format, args...))
+		os.Exit(1)
 	}
 }
 
-// Panic logs a message at level Painc on the compatibleLogger.
+// Panic logs a message at level Painc on the compatibleLogger.  followed by a call to panic().
 func Panic(args ...interface{}) {
 	if logger != nil {
 		logger.Panic(strings.TrimRight(fmt.Sprintln(args...), "\n"))
 	} else {
 		printlnLog("c-panic", args...)
+		panic(fmt.Sprint(args...))
 	}
 }
 
@@ -537,6 +540,7 @@ func Panicf(format string, args ...interface{}) {
 		logger.Panic(fmt.Sprintf(format, args...))
 	} else {
 		printlnLog("c-panic", fmt.Sprintf(format, args...))
+		panic(fmt.Sprint(args...))
 	}
 }
 

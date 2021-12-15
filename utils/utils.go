@@ -113,6 +113,11 @@ func GetAbsolutePath(addPath string) string {
 	return fileDir
 }
 
+func GetWorkPath() string {
+	workDir, _ := os.Getwd()
+	return workDir
+}
+
 func BoolString(b bool) string {
 	if b == true {
 		return "true"
@@ -191,7 +196,7 @@ func FloatDecimalPoint(v float64, pointNum int) float64 {
 	return f
 }
 
-func GetTime() string {
+func GetTimeFormat() string {
 	return time.Now().Format("2006-01-02 15:04:05.000")
 }
 
