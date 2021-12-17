@@ -2,9 +2,11 @@ package utils
 
 import (
 	"bytes"
+	"crypto/md5"
+	"crypto/sha256"
+	"encoding/hex"
 	"encoding/json"
 	"fmt"
-	"io/ioutil"
 	"os"
 	"path/filepath"
 	"reflect"
@@ -12,12 +14,6 @@ import (
 	"strconv"
 	"time"
 )
-
-/*
-0在C语言以及Go语言不同的表现在大部分情况下不会造成问题，但是当使用io.Reader(b []byte)时，如果传入的字节数组b本身长度大于reader可读到的长度，则会导致末尾被0补齐。当直接使用string(b)强制类型转换时会导致显示上看似无问题，但是实际上字符串并不相同。
-要解决这个问题需要对[]byte和string的转换过程进行一个封装。
-这里实现了针对两种情况的解决方案，前者是遇到0就结束转换，后者则是忽略所有的0并将剩余部分拼接
-*/
 
 // String 将 `[]byte` 转换为 `string`
 func String(b []byte) string {
@@ -145,30 +141,6 @@ func StrToInt(strNumber string, value interface{}) (err error) {
 		}
 	}
 	return
-}
-
-func ReadFile(path string) ([]byte, error) {
-	f, err := os.Open(path)
-	if err != nil {
-		return nil, err
-	}
-	defer f.Close()
-	return ioutil.ReadAll(f)
-}
-
-func WriteFile(path string, buf []byte) error {
-	f, err := os.OpenFile(path, os.O_WRONLY, 0666)
-	if err != nil {
-		if os.IsPermission(err) {
-			fmt.Println("error write permission denied")
-		}
-		if os.IsNotExist(err) {
-			fmt.Println("file does not exist")
-		}
-		return err
-	}
-	defer f.Close()
-	return ioutil.WriteFile(path, buf, 0666)
 }
 
 func GetUintByInterface(obj interface{}) uint {
@@ -319,29 +291,18 @@ func CheckStructItemIsNull(obj interface{}) (string, bool) {
 	return "", false
 }
 
-// IsExist returns whether the given file or directory exists or not
-func IsExist(path string) bool {
-	_, err := os.Stat(path)
-	if err == nil {
-		return true
-	}
-	if os.IsNotExist(err) {
-		return false
-	}
-	return true
+// Md5 md5加密
+func Md5(src string) string {
+	m := md5.New()
+	m.Write([]byte(src))
+	res := hex.EncodeToString(m.Sum(nil))
+	return res
 }
 
-func IsDir(path string) bool {
-	info, err := os.Stat(path)
-	if err != nil {
-		// no such file or dir
-		return false
-	}
-	if info.IsDir() {
-		// it's a directory
-		return true
-	} else {
-		// it's a file
-		return false
-	}
+// Sha256 Sha256加密
+func Sha256(src string) string {
+	m := sha256.New()
+	m.Write([]byte(src))
+	res := hex.EncodeToString(m.Sum(nil))
+	return res
 }

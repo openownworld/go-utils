@@ -12,7 +12,7 @@ import (
 	"fmt"
 	"github.com/openownworld/go-utils/ini-utils"
 	"github.com/openownworld/go-utils/log/errlog"
-	"github.com/openownworld/go-utils/utils"
+	"github.com/openownworld/go-utils/utils/file"
 	"go.uber.org/zap"
 	"go.uber.org/zap/zapcore"
 	"gopkg.in/natefinch/lumberjack.v2"
@@ -96,7 +96,7 @@ var atomLevel zap.AtomicLevel
 
 // InitLoggerFile 3个接口，1初始化日志库，通过配置文件
 func InitLoggerFile(filePath string) error {
-	if !utils.IsExist(filePath) {
+	if !file.IsExist(filePath) {
 		Error(filePath + " file path not exist")
 		return errors.New(filePath + " file path not exist")
 	}
