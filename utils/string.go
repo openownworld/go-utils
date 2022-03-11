@@ -1,4 +1,4 @@
-package str
+package utils
 
 import (
 	"math/rand"
@@ -20,4 +20,23 @@ func Center(s string, n int, fill string) string {
 
 func Random(min, max int) int {
 	return rand.Intn(max-min) + min
+}
+
+func SubString(str string, begin, length int) (substr string) {
+	// 将字符串的转换成[]rune
+	rs := []rune(str)
+	n := len(rs)
+	// 简单的越界判断
+	if begin < 0 {
+		begin = 0
+	}
+	if begin >= n {
+		begin = n
+	}
+	end := begin + length
+	if end > n {
+		end = n
+	}
+	// 返回子串
+	return string(rs[begin:end])
 }

@@ -2,9 +2,6 @@ package utils
 
 import (
 	"bytes"
-	"crypto/md5"
-	"crypto/sha256"
-	"encoding/hex"
 	"encoding/json"
 	"fmt"
 	"os"
@@ -289,20 +286,4 @@ func CheckStructItemIsNull(obj interface{}) (string, bool) {
 		}
 	}
 	return "", false
-}
-
-// Md5 md5加密
-func Md5(src string) string {
-	m := md5.New()
-	m.Write([]byte(src))
-	res := hex.EncodeToString(m.Sum(nil))
-	return res
-}
-
-// Sha256 Sha256加密
-func Sha256(src string) string {
-	m := sha256.New()
-	m.Write([]byte(src))
-	res := hex.EncodeToString(m.Sum(nil))
-	return res
 }
