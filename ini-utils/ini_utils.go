@@ -9,6 +9,8 @@ package ini_utils
 
 import (
 	"fmt"
+	"io"
+
 	"github.com/go-ini/ini"
 )
 
@@ -22,12 +24,23 @@ type ParserError struct {
 
 func (p *ParserError) Error() string { return p.errorInfo }
 
+func NewIniParserByIO(iniReader io.Reader) (*Parser, error) {
+	p := Parser{}
+	conf, err := ini.Load(iniReader)
+	if err != nil {
+		p.reader = nil
+		return nil, fmt.Errorf("load config stream failed: %v", err)
+	}
+	p.reader = conf
+	return &p, nil
+}
+
 func NewIniParser(fileName string) (*Parser, error) {
 	p := Parser{}
 	conf, err := ini.Load(fileName)
 	if err != nil {
 		p.reader = nil
-		return nil, fmt.Errorf("load config file %s, error %s \n", fileName, err.Error())
+		return nil, fmt.Errorf("load config file %s, error %s", fileName, err.Error())
 	}
 	p.reader = conf
 	return &p, nil

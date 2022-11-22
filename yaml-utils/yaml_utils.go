@@ -2,9 +2,11 @@ package yaml_utils
 
 import (
 	"fmt"
-	"gopkg.in/yaml.v3"
+	"io"
 	"io/ioutil"
 	"os"
+
+	"gopkg.in/yaml.v3"
 )
 
 // NewYamlConfig 读取配置文件，填充yamlConfig 结构体，传入地址
@@ -22,6 +24,19 @@ func NewYamlConfig(confFileName string, yamlConfig interface{}) error {
 	err = yaml.Unmarshal([]byte(contentByte), yamlConfig)
 	if err != nil {
 		return fmt.Errorf("unmarshal config file %s, error %s ", confFileName, err.Error())
+	}
+	return nil
+}
+
+func NewYamlConfigByIO(iniReader io.Reader, yamlConfig interface{}) error {
+	contentByte, err := ioutil.ReadAll(iniReader)
+	if err != nil {
+		return fmt.Errorf("read config stream, error %s ", err.Error())
+	}
+	//读配置文件
+	err = yaml.Unmarshal([]byte(contentByte), yamlConfig)
+	if err != nil {
+		return fmt.Errorf("unmarshal config stream, error %s ", err.Error())
 	}
 	return nil
 }
