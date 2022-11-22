@@ -10,12 +10,7 @@ package zaplog
 import (
 	"errors"
 	"fmt"
-	"github.com/openownworld/go-utils/ini-utils"
-	"github.com/openownworld/go-utils/log/errlog"
-	"github.com/openownworld/go-utils/utils"
-	"go.uber.org/zap"
-	"go.uber.org/zap/zapcore"
-	"gopkg.in/natefinch/lumberjack.v2"
+	"io"
 	"io/ioutil"
 	"net"
 	"net/http"
@@ -26,6 +21,13 @@ import (
 	"runtime/debug"
 	"strings"
 	"time"
+
+	ini_utils "github.com/openownworld/go-utils/ini-utils"
+	"github.com/openownworld/go-utils/log/errlog"
+	"github.com/openownworld/go-utils/utils"
+	"go.uber.org/zap"
+	"go.uber.org/zap/zapcore"
+	"gopkg.in/natefinch/lumberjack.v2"
 )
 
 // LogConfig 封装高性能日志库zap
@@ -74,7 +76,20 @@ func init() {
 	}
 }
 
-func initConfig(filePath string, v interface{}) error {
+func InitConfigByIO(reader io.Reader, v interface{}) error {
+	//读配置文件
+	iniParser, err := ini_utils.NewIniParserByIO(reader)
+	if err != nil {
+		return err
+	}
+	if err := iniParser.GetFileHandle().MapTo(v); err != nil {
+		errlog.WriteLogErrorf("MapTo config stream, error %s \n", err.Error())
+		return err
+	}
+	return nil
+}
+
+func InitConfig(filePath string, v interface{}) error {
 	//读配置文件
 	iniParser, err := ini_utils.NewIniParser(filePath)
 	if err != nil {
@@ -87,11 +102,11 @@ func initConfig(filePath string, v interface{}) error {
 	return nil
 }
 
-//支持文件大小限制，level，文件行号函数名。
-//go get -u -v github.com/lestrrat-go/file-rotatelogs
+// 支持文件大小限制，level，文件行号函数名。
+// go get -u -v github.com/lestrrat-go/file-rotatelogs
 var logger *zap.Logger
 
-//var errorLogger *zap.SugaredLogger
+// var errorLogger *zap.SugaredLogger
 var atomLevel zap.AtomicLevel
 
 // InitLoggerFile 3个接口，1初始化日志库，通过配置文件
@@ -100,7 +115,16 @@ func InitLoggerFile(filePath string) error {
 		Error(filePath + " file path not exist")
 		return errors.New(filePath + " file path not exist")
 	}
-	err := initConfig(filePath, &logConfig)
+	err := InitConfig(filePath, &logConfig)
+	errlog.CheckError(err)
+	if err == nil && logger == nil {
+		logger = initLogger(logConfig)
+	}
+	return nil
+}
+
+func InitLoggerByIO(reader io.Reader) error {
+	err := InitConfigByIO(reader, &logConfig)
 	errlog.CheckError(err)
 	if err == nil && logger == nil {
 		logger = initLogger(logConfig)

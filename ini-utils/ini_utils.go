@@ -24,9 +24,9 @@ type ParserError struct {
 
 func (p *ParserError) Error() string { return p.errorInfo }
 
-func NewIniParserByIO(iniReader io.Reader) (*Parser, error) {
+func NewIniParserByIO(reader io.Reader) (*Parser, error) {
 	p := Parser{}
-	conf, err := ini.Load(iniReader)
+	conf, err := ini.Load(reader)
 	if err != nil {
 		p.reader = nil
 		return nil, fmt.Errorf("load config stream failed: %v", err)

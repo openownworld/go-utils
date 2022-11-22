@@ -28,8 +28,8 @@ func NewYamlConfig(confFileName string, yamlConfig interface{}) error {
 	return nil
 }
 
-func NewYamlConfigByIO(iniReader io.Reader, yamlConfig interface{}) error {
-	contentByte, err := ioutil.ReadAll(iniReader)
+func NewYamlConfigByIO(reader io.Reader, yamlConfig interface{}) error {
+	contentByte, err := ioutil.ReadAll(reader)
 	if err != nil {
 		return fmt.Errorf("read config stream, error %s ", err.Error())
 	}
