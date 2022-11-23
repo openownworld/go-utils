@@ -3,12 +3,13 @@ package zaplog
 import (
 	"encoding/json"
 	"fmt"
-	"github.com/openownworld/go-utils/utils"
-	"go.uber.org/zap/zapcore"
 	"log"
 	"path"
 	"testing"
 	"time"
+
+	"github.com/openownworld/go-utils/utils"
+	"go.uber.org/zap/zapcore"
 
 	"go.uber.org/zap"
 )
@@ -19,6 +20,7 @@ func TestLog(t *testing.T) {
 	defer PrintPanicLog()
 	//panic("ppp")
 	t.Log(GetCallerInfo(1))
+	InfoWithField("test", zap.String("url", "[http://www.baidu.com](http://www.baidu.com/)"), zap.Int("attempt", 3))
 	for i := 0; i < 1; i++ {
 		//time.Sleep(1 * time.Second)
 		time.Sleep(10 * time.Millisecond)

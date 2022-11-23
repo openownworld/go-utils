@@ -35,6 +35,8 @@ import (
 // 支持日志分级warn error能单独复制提取保存文件，支持动态设置日志分级，支持日志压缩
 type LogConfig struct {
 	//配置文件要通过tag来指定配置文件中的名称
+	ServiceName        string `ini:"serviceName"`
+	CustomTimeEnable   bool   `ini:"customTimeEnable"`
 	LogFileName        string `ini:"logFileName"`
 	ErrorFileName      string `ini:"errorFileName"`
 	MaxSize            int    `ini:"maxSize"`
@@ -171,7 +173,7 @@ func InitLoggerDefaultCfg() {
 
 const (
 	maxStack  = 20
-	separator = "捕获异常---------------------------------------"
+	separator = "capture panic---------------------------------------"
 )
 
 // PrintPanicLog 打印堆栈信息
@@ -242,7 +244,8 @@ func getLevel(loglevel string) zapcore.Level {
 
 func customTimeEncoder(t time.Time, enc zapcore.PrimitiveArrayEncoder) {
 	//enc.AppendString("[" + t.Format("2006-01-02 15:04:05.000000") + "]")
-	enc.AppendString("[" + t.Format("2006-01-02 15:04:05.000") + "]")
+	//enc.AppendString("[" + t.Format("2006-01-02 15:04:05.000") + "]")
+	enc.AppendString(t.Format("2006-01-02 15:04:05.000"))
 }
 
 func customLevelEncoder(level zapcore.Level, enc zapcore.PrimitiveArrayEncoder) {
@@ -289,18 +292,22 @@ func initLogger(logConfig LogConfig) *zap.Logger {
 	//encoderConfig := zap.NewProductionEncoderConfig()
 	encoderConfig := zap.NewDevelopmentEncoderConfig()
 	// Keys can be anything except the empty string.
-	encoderConfig.TimeKey = "t"
-	encoderConfig.LevelKey = "l"
-	encoderConfig.NameKey = "n"
-	encoderConfig.CallerKey = "c"
-	encoderConfig.MessageKey = "m"
-	encoderConfig.StacktraceKey = "s"
+	encoderConfig.TimeKey = "time"
+	encoderConfig.LevelKey = "level"
+	encoderConfig.NameKey = "name"
+	encoderConfig.CallerKey = "caller"
+	encoderConfig.MessageKey = "msg"
+	encoderConfig.StacktraceKey = "stack"
 	encoderConfig.LineEnding = zapcore.DefaultLineEnding
 	//encoderConfig.EncodeLevel = zapcore.CapitalLevelEncoder
 	encoderConfig.EncodeLevel = zapcore.LowercaseLevelEncoder // 小写编码器
 	//encoderConfig.EncodeLevel = zapcore.LowercaseColorLevelEncoder
 	//encoderConfig.EncodeTime = zapcore.ISO8601TimeEncoder
-	encoderConfig.EncodeTime = customTimeEncoder //zapcore.ISO8601TimeEncoder,     // ISO8601 UTC 时间格式
+	if logConfig.CustomTimeEnable {
+		encoderConfig.EncodeTime = customTimeEncoder //zapcore.ISO8601TimeEncoder,     // ISO8601 UTC 时间格式
+	} else {
+		encoderConfig.EncodeTime = zapcore.ISO8601TimeEncoder // ISO8601 UTC 时间格式
+	}
 	encoderConfig.EncodeDuration = zapcore.StringDurationEncoder
 	encoderConfig.EncodeCaller = zapcore.ShortCallerEncoder //zapcore.FullCallerEncoder,      // 全路径编码器
 	//[4]配置多个输出方式
@@ -389,12 +396,17 @@ func initLogger(logConfig LogConfig) *zap.Logger {
 	//caller := zap.AddCaller()
 	// 开启文件及行号
 	//development := zap.Development()
-	logger := zap.New(core, zap.Development(), zap.AddCaller(), zap.AddCallerSkip(1), zap.AddStacktrace(getLevel(logConfig.StacktraceLevel)))
+	// 设置初始化字段 service key
+	filed := zap.Fields()
+	if len(logConfig.ServiceName) > 0 {
+		filed = zap.Fields(zap.String("service", logConfig.ServiceName))
+	}
+	logger := zap.New(core, zap.Development(), zap.AddCaller(), zap.AddCallerSkip(1), zap.AddStacktrace(getLevel(logConfig.StacktraceLevel)), filed)
 	//logger := zap.New(core, zap.Development(), zap.AddCaller(), zap.AddStacktrace(getLevel(logConfig.StacktraceLevel)))
 	defer logger.Sync()
 	//
-	logger.Info("")
-	logger.Error("")
+	//logger.Info("")
+	//logger.Error("")
 	logger.Info("DefaultLogger init success [" + logConfig.Level + "]")
 	logger.Error("DefaultLogger init success [" + logConfig.Level + "]")
 	//logger.Debug("Debug")
@@ -404,7 +416,7 @@ func initLogger(logConfig LogConfig) *zap.Logger {
 	//logger.Fatal("Fatal")
 	//[6]支持 restful api修改level  http://localhost:9090/api/log/level
 	//curl -H "Content-Type:application/json" -X PUT --data "{\"level\":\"error\"}" http://localhost:9090/api/log/level
-	if logConfig.LevelHttpEnable == true {
+	if logConfig.LevelHttpEnable {
 		levelHttp := logConfig.LevelHttpApi
 		levelHttpPort := ":" + logConfig.LevelHttpPort
 		http.HandleFunc(levelHttp, atomLevel.ServeHTTP)
@@ -592,4 +604,40 @@ func WithFields(fields map[string]interface{}) {
 		i++
 	}
 	logger.With(first...)
+}
+
+// DebugWithField logs a message at level Info on the compatibleLogger.
+func DebugWithField(msg string, fields ...zap.Field) {
+	if logger != nil {
+		logger.Debug(msg, fields...)
+	} else {
+		printlnLog("c-debug", msg)
+	}
+}
+
+// InfoWithField logs a message at level Info on the compatibleLogger.
+func InfoWithField(msg string, fields ...zap.Field) {
+	if logger != nil {
+		logger.Info(msg, fields...)
+	} else {
+		printlnLog("c-info", msg)
+	}
+}
+
+// WarnWithField logs a message at level Info on the compatibleLogger.
+func WarnWithField(msg string, fields ...zap.Field) {
+	if logger != nil {
+		logger.Warn(msg, fields...)
+	} else {
+		printlnLog("c-warn", msg)
+	}
+}
+
+// ErrorWithField logs a message at level Info on the compatibleLogger.
+func ErrorWithField(msg string, fields ...zap.Field) {
+	if logger != nil {
+		logger.Error(msg, fields...)
+	} else {
+		printlnLog("c-error", msg)
+	}
 }
